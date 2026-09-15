@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 
 from src.interfaces.api.health import router as health_router
+from src.interfaces.api.sensors import router as sensors_router
 
 
 app = FastAPI(
@@ -11,8 +13,16 @@ app = FastAPI(
     redoc_url=None,
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(health_router)
+app.include_router(sensors_router)
 
 
 @app.get("/")

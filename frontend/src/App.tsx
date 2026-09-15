@@ -1,43 +1,44 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import SensorList from "./features/sensors/SensorList";
+import { Link, Route, Routes } from "react-router-dom";
 
 const sections = [
   {
-    id: 'sensors',
-    title: 'Sensors',
-    description: 'Monitor temperature, humidity, soil moisture, and more.',
-    icon: '🌡️',
+    id: "sensors",
+    title: "Sensors",
+    description: "Monitor temperature, humidity, soil moisture, and more.",
+    icon: "🌡️",
   },
   {
-    id: 'config',
-    title: 'Configuration',
-    description: 'Configure greenhouse settings and sensor thresholds.',
-    icon: '⚙️',
+    id: "config",
+    title: "Configuration",
+    description: "Configure greenhouse settings and sensor thresholds.",
+    icon: "⚙️",
   },
   {
-    id: 'automation',
-    title: 'Automation',
-    description: 'Manage automatic actions and greenhouse routines.',
-    icon: '🤖',
+    id: "automation",
+    title: "Automation",
+    description: "Manage automatic actions and greenhouse routines.",
+    icon: "🤖",
   },
   {
-    id: 'overview',
-    title: 'Overview',
-    description: 'Get a quick overview of your greenhouse status.',
-    icon: '📊',
+    id: "overview",
+    title: "Overview",
+    description: "Get a quick overview of your greenhouse status.",
+    icon: "📊",
   },
   {
-    id: 'controls',
-    title: 'Controls',
-    description: 'Control greenhouse devices and equipment.',
-    icon: '🎛️',
+    id: "controls",
+    title: "Controls",
+    description: "Control greenhouse devices and equipment.",
+    icon: "🎛️",
   },
   {
-    id: 'events',
-    title: 'Events',
-    description: 'View system events, alerts, and activity.',
-    icon: '🔔',
+    id: "events",
+    title: "Events",
+    description: "View system events, alerts, and activity.",
+    icon: "🔔",
   },
-]
+];
 
 function Dashboard() {
   return (
@@ -75,13 +76,13 @@ function Dashboard() {
               to={`/${section.id}`}
               className="mt-6 block rounded-lg bg-slate-800 px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-700"
             >
-              Coming soon
+              Open
             </Link>
           </article>
         ))}
       </section>
     </main>
-  )
+  );
 }
 
 function SectionPage({
@@ -89,9 +90,9 @@ function SectionPage({
   description,
   icon,
 }: {
-  title: string
-  description: string
-  icon: string
+  title: string;
+  description: string;
+  icon: string;
 }) {
   return (
     <main className="mx-auto max-w-4xl px-6 py-16">
@@ -114,7 +115,34 @@ function SectionPage({
         </div>
       </div>
     </main>
-  )
+  );
+}
+
+function SensorsPage() {
+  return (
+    <main className="mx-auto max-w-7xl px-6 py-16">
+      <Link
+        to="/"
+        className="text-sm text-slate-400 transition hover:text-white"
+      >
+        ← Back to Dashboard
+      </Link>
+
+      <div className="mt-10">
+        <div className="mb-8">
+          <div className="mb-4 text-5xl">🌡️</div>
+
+          <h2 className="text-3xl font-bold">Sensors</h2>
+
+          <p className="mt-3 text-slate-400">
+            Create and monitor greenhouse sensors.
+          </p>
+        </div>
+
+        <SensorList />
+      </div>
+    </main>
+  );
 }
 
 function App() {
@@ -141,22 +169,26 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
 
-        {sections.map((section) => (
-          <Route
-            key={section.id}
-            path={`/${section.id}`}
-            element={
-              <SectionPage
-                title={section.title}
-                description={section.description}
-                icon={section.icon}
-              />
-            }
-          />
-        ))}
+        <Route path="/sensors" element={<SensorsPage />} />
+
+        {sections
+          .filter((section) => section.id !== "sensors")
+          .map((section) => (
+            <Route
+              key={section.id}
+              path={`/${section.id}`}
+              element={
+                <SectionPage
+                  title={section.title}
+                  description={section.description}
+                  icon={section.icon}
+                />
+              }
+            />
+          ))}
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

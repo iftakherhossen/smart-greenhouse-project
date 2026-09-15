@@ -6,6 +6,8 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.infrastructure.settings import get_settings
+from src.infrastructure.persistence.base import Base
+from src.infrastructure.persistence import models
 
 
 config = context.config
@@ -20,7 +22,7 @@ config.set_main_option(
     settings.database_url,
 )
 
-target_metadata = None
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
