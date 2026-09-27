@@ -17,6 +17,12 @@ class DeviceRow(Base):
         server_default=text("gen_random_uuid()"),
     )
 
+    device_family: Mapped[str] = mapped_column(
+        String(32),
+        nullable=False,
+        server_default=text("'sensor'"),
+    )
+
     device_type: Mapped[str] = mapped_column(
         String(64),
         nullable=False,
@@ -47,4 +53,5 @@ class DeviceRow(Base):
 
     __table_args__ = (
         Index("ix_devices_role", "role"),
+        Index("ix_devices_device_family", "device_family"),
     )

@@ -1,7 +1,7 @@
-from uuid import UUID
-
+﻿from uuid import UUID
+from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 from sqlalchemy.orm import Session
 
 from src.application.sensors.service import SensorService
@@ -16,12 +16,27 @@ router = APIRouter(
 
 
 class SensorCreateRequest(BaseModel):
-    type: str
+    type: str | None = None
+    device_type: str | None = None
     display_name: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_fields(cls, values: Any) -> Any:
+        if isinstance(values, dict):
+            raw = values.get("type") or values.get("device_type") or "moisture"
+            # Normalize to the exact keys creators.py uses ("moisture" / "light")
+            if "light" in raw.lower():
+                normalized = "light"
+            else:
+                normalized = "moisture"
+            values["type"] = normalized
+            values["device_type"] = normalized
+        return values
 
 
 class SensorResponse(BaseModel):
-    id: UUID
+    id: UUID | str
     device_type: str
     display_name: str | None
     default_config: dict
@@ -49,8 +64,9 @@ def create_sensor(
     service: SensorService = Depends(get_sensor_service),
 ):
     try:
+        chosen_type = request.type or "moisture"
         return service.create_sensor(
-            sensor_type=request.type,
+            sensor_type=chosen_type,
             display_name=request.display_name,
         )
     except ValueError as error:

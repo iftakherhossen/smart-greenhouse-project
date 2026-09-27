@@ -1,7 +1,14 @@
-import SensorList from "./features/sensors/SensorList";
+﻿import SensorList from "./features/sensors/SensorList";
+import { DeviceList } from "./components/devices/DeviceList";
 import { Link, Route, Routes } from "react-router-dom";
 
 const sections = [
+  {
+    id: "devices",
+    title: "Devices",
+    description: "Manage simulation and edge device kits using Abstract Factory.",
+    icon: "🔌",
+  },
   {
     id: "sensors",
     title: "Sensors",
@@ -118,6 +125,33 @@ function SectionPage({
   );
 }
 
+function DevicesPage() {
+  return (
+    <main className="mx-auto max-w-7xl px-6 py-16">
+      <Link
+        to="/"
+        className="text-sm text-slate-400 transition hover:text-white"
+      >
+        ← Back to Dashboard
+      </Link>
+
+      <div className="mt-10">
+        <div className="mb-8">
+          <div className="mb-4 text-5xl">🔌</div>
+
+          <h2 className="text-3xl font-bold">Devices</h2>
+
+          <p className="mt-3 text-slate-400">
+            Provision and inspect coherent device kits across simulation and edge hardware families.
+          </p>
+        </div>
+
+        <DeviceList />
+      </div>
+    </main>
+  );
+}
+
 function SensorsPage() {
   return (
     <main className="mx-auto max-w-7xl px-6 py-16">
@@ -168,11 +202,11 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Dashboard />} />
-
+        <Route path="/devices" element={<DevicesPage />} />
         <Route path="/sensors" element={<SensorsPage />} />
 
         {sections
-          .filter((section) => section.id !== "sensors")
+          .filter((section) => section.id !== "sensors" && section.id !== "devices")
           .map((section) => (
             <Route
               key={section.id}
