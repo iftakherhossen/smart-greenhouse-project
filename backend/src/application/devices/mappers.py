@@ -1,4 +1,5 @@
 ﻿from datetime import datetime, timezone
+
 from src.application.devices.dto import DeviceDto
 from src.domain.devices.entity import Device
 
@@ -6,6 +7,7 @@ from src.domain.devices.entity import Device
 def device_to_dto(entity: Device) -> DeviceDto:
     # Use getattr so missing created_at attribute does not crash
     created_val = getattr(entity, "created_at", None)
+
     if isinstance(created_val, datetime):
         iso_created = created_val.isoformat()
     elif isinstance(created_val, str) and created_val:
@@ -20,6 +22,8 @@ def device_to_dto(entity: Device) -> DeviceDto:
         device_family=entity.device_family,
         display_name=entity.display_name,
         default_config=entity.default_config,
+        zone_id=entity.zone_id,
+        location_id=entity.location_id,
         created_at=iso_created,
     )
 

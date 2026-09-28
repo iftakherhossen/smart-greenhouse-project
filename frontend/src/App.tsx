@@ -1,48 +1,56 @@
 ﻿import SensorList from "./features/sensors/SensorList";
 import { DeviceList } from "./components/devices/DeviceList";
+import { LocationConfigWizard } from "./components/config/LocationConfigWizard";
 import { Link, Route, Routes } from "react-router-dom";
 
 const sections = [
   {
     id: "devices",
     title: "Devices",
-    description: "Manage simulation and edge device kits using Abstract Factory.",
+    description:
+      "Manage simulation and edge device kits using Abstract Factory.",
     icon: "🔌",
   },
   {
     id: "sensors",
     title: "Sensors",
-    description: "Monitor temperature, humidity, soil moisture, and more.",
+    description:
+      "Monitor temperature, humidity, soil moisture, and more.",
     icon: "🌡️",
   },
   {
     id: "config",
     title: "Configuration",
-    description: "Configure greenhouse settings and sensor thresholds.",
+    description:
+      "Configure greenhouse locations, zones, and device assignments.",
     icon: "⚙️",
   },
   {
     id: "automation",
     title: "Automation",
-    description: "Manage automatic actions and greenhouse routines.",
+    description:
+      "Manage automatic actions and greenhouse routines.",
     icon: "🤖",
   },
   {
     id: "overview",
     title: "Overview",
-    description: "Get a quick overview of your greenhouse status.",
+    description:
+      "Get a quick overview of your greenhouse status.",
     icon: "📊",
   },
   {
     id: "controls",
     title: "Controls",
-    description: "Control greenhouse devices and equipment.",
+    description:
+      "Control greenhouse devices and equipment.",
     icon: "🎛️",
   },
   {
     id: "events",
     title: "Events",
-    description: "View system events, alerts, and activity.",
+    description:
+      "View system events, alerts, and activity.",
     icon: "🔔",
   },
 ];
@@ -73,14 +81,16 @@ function Dashboard() {
               {section.icon}
             </div>
 
-            <h3 className="text-xl font-semibold">{section.title}</h3>
+            <h3 className="text-xl font-semibold">
+              {section.title}
+            </h3>
 
             <p className="mt-2 text-sm leading-6 text-slate-400">
               {section.description}
             </p>
 
             <Link
-              to={`/${section.id}`}
+              to={"/" + section.id}
               className="mt-6 block rounded-lg bg-slate-800 px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-700"
             >
               Open
@@ -113,9 +123,13 @@ function SectionPage({
       <div className="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-8">
         <div className="mb-5 text-5xl">{icon}</div>
 
-        <h2 className="text-3xl font-bold">{title}</h2>
+        <h2 className="text-3xl font-bold">
+          {title}
+        </h2>
 
-        <p className="mt-3 text-slate-400">{description}</p>
+        <p className="mt-3 text-slate-400">
+          {description}
+        </p>
 
         <div className="mt-8 rounded-lg bg-slate-800 px-4 py-3 text-slate-500">
           Coming soon
@@ -139,10 +153,13 @@ function DevicesPage() {
         <div className="mb-8">
           <div className="mb-4 text-5xl">🔌</div>
 
-          <h2 className="text-3xl font-bold">Devices</h2>
+          <h2 className="text-3xl font-bold">
+            Devices
+          </h2>
 
           <p className="mt-3 text-slate-400">
-            Provision and inspect coherent device kits across simulation and edge hardware families.
+            Provision and inspect coherent device kits across
+            simulation and edge hardware families.
           </p>
         </div>
 
@@ -166,7 +183,9 @@ function SensorsPage() {
         <div className="mb-8">
           <div className="mb-4 text-5xl">🌡️</div>
 
-          <h2 className="text-3xl font-bold">Sensors</h2>
+          <h2 className="text-3xl font-bold">
+            Sensors
+          </h2>
 
           <p className="mt-3 text-slate-400">
             Create and monitor greenhouse sensors.
@@ -179,38 +198,100 @@ function SensorsPage() {
   );
 }
 
+function ConfigurationPage() {
+  return (
+    <main className="mx-auto max-w-7xl px-6 py-16">
+      <Link
+        to="/"
+        className="text-sm text-slate-400 transition hover:text-white"
+      >
+        ← Back to Dashboard
+      </Link>
+
+      <div className="mt-10">
+        <div className="mb-8">
+          <div className="mb-4 text-5xl">⚙️</div>
+
+          <h2 className="text-3xl font-bold">
+            Configuration
+          </h2>
+
+          <p className="mt-3 text-slate-400">
+            Configure locations, zones, moisture thresholds,
+            and device assignments.
+          </p>
+        </div>
+
+        <LocationConfigWizard />
+      </div>
+    </main>
+  );
+}
+
 function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-slate-800 bg-slate-900">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="flex items-center gap-3"
+          >
             <span className="text-2xl">🌱</span>
 
             <div>
-              <h1 className="text-lg font-semibold">Smart Greenhouse</h1>
-              <p className="text-sm text-slate-400">Home Dashboard</p>
+              <h1 className="text-lg font-semibold">
+                Smart Greenhouse
+              </h1>
+
+              <p className="text-sm text-slate-400">
+                Home Dashboard
+              </p>
             </div>
           </Link>
 
           <div className="flex items-center gap-2 rounded-full bg-slate-800 px-3 py-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
-            <span className="text-sm text-slate-300">API: OK</span>
+
+            <span className="text-sm text-slate-300">
+              API: OK
+            </span>
           </div>
         </div>
       </header>
 
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/devices" element={<DevicesPage />} />
-        <Route path="/sensors" element={<SensorsPage />} />
+        <Route
+          path="/"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/devices"
+          element={<DevicesPage />}
+        />
+
+        <Route
+          path="/sensors"
+          element={<SensorsPage />}
+        />
+
+        <Route
+          path="/config"
+          element={<ConfigurationPage />}
+        />
 
         {sections
-          .filter((section) => section.id !== "sensors" && section.id !== "devices")
+          .filter(
+            (section) =>
+              section.id !== "sensors" &&
+              section.id !== "devices" &&
+              section.id !== "config",
+          )
           .map((section) => (
             <Route
               key={section.id}
-              path={`/${section.id}`}
+              path={"/" + section.id}
               element={
                 <SectionPage
                   title={section.title}

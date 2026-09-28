@@ -1,5 +1,6 @@
 ﻿from typing import Literal
 from uuid import UUID
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -10,5 +11,7 @@ class DeviceDto(BaseModel):
     device_family: str
     display_name: str
     default_config: dict
+    zone_id: UUID | None = None
+    location_id: UUID | None = None
 
     model_config = ConfigDict(from_attributes=True)
