@@ -13,11 +13,11 @@ class Settings(BaseSettings):
     postgres_password: str = "greenhouse"
     postgres_db: str = "greenhouse"
     postgres_host: str = "localhost"
-    postgres_port: int = 5433
+    postgres_port: int = 5432
 
     database_url: str = (
         "postgresql+psycopg://"
-        "greenhouse:greenhouse@localhost:5433/greenhouse"
+        "greenhouse:greenhouse@localhost:5432/greenhouse"
     )
 
     api_host: str = "0.0.0.0"

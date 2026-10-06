@@ -1,6 +1,7 @@
 ﻿from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from src.application.devices.dto import DeviceDto
@@ -10,6 +11,7 @@ from src.application.locations.dto import DeviceZoneAssignmentRequest
 from src.application.locations.zone_assignment_service import (
     ZoneAssignmentService,
 )
+from src.application.sensors.sampling_service import SamplingDto, SamplingService
 from src.infrastructure.db import get_db
 from src.infrastructure.persistence.device_repository import DeviceRepository
 
@@ -18,6 +20,17 @@ router = APIRouter(
     prefix="/api/devices",
     tags=["devices"],
 )
+
+
+class SamplingUpdateRequest(BaseModel):
+    sampling_interval_seconds: int
+    tracking_enabled: bool
+
+
+class SamplingResponse(BaseModel):
+    device_id: UUID
+    sampling_interval_seconds: int
+    tracking_enabled: bool
 
 
 def get_device_family_service(
@@ -32,6 +45,13 @@ def get_zone_assignment_service(
 ) -> ZoneAssignmentService:
     repository = DeviceRepository(db)
     return ZoneAssignmentService(repository)
+
+
+def get_sampling_service(
+    db: Session = Depends(get_db),
+) -> SamplingService:
+    repository = DeviceRepository(db)
+    return SamplingService(repository)
 
 
 @router.get("", response_model=list[DeviceDto])
@@ -77,6 +97,45 @@ def provision_device_family(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(error),
+        )
+
+
+@router.patch(
+    "/{device_id}/sampling",
+    response_model=SamplingResponse,
+)
+def update_sampling(
+    device_id: UUID,
+    request: SamplingUpdateRequest,
+    service: SamplingService = Depends(
+        get_sampling_service
+    ),
+) -> SamplingResponse:
+    try:
+        result: SamplingDto = service.update(
+            device_id=device_id,
+            sampling_interval_seconds=request.sampling_interval_seconds,
+            tracking_enabled=request.tracking_enabled,
+        )
+
+        return SamplingResponse(
+            device_id=result.device_id,
+            sampling_interval_seconds=result.sampling_interval_seconds,
+            tracking_enabled=result.tracking_enabled,
+        )
+
+    except ValueError as error:
+        message = str(error)
+
+        if message.startswith("Device not found"):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=message,
+            )
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=message,
         )
 
 

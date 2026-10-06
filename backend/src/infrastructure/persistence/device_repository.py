@@ -116,6 +116,46 @@ class DeviceRepository:
     ) -> DeviceRow | None:
         return self._db.get(DeviceRow, device_id)
 
+    def get_device(
+        self,
+        device_id: UUID,
+    ) -> Device | None:
+        row = self._db.get(DeviceRow, device_id)
+
+        if row is None:
+            return None
+
+        return self._row_to_device(row)
+
+    # --- Phase 5 Sampling Methods ---
+    def update_sampling(
+        self,
+        device_id: UUID,
+        sampling_interval_seconds: int,
+        tracking_enabled: bool,
+    ) -> Device | None:
+        row = self._db.get(DeviceRow, device_id)
+
+        if row is None:
+            return None
+
+        if sampling_interval_seconds < 5:
+            raise ValueError(
+                "Sampling interval must be at least 5 seconds."
+            )
+
+        row.sampling_interval_seconds = sampling_interval_seconds
+        row.tracking_enabled = tracking_enabled
+
+        try:
+            self._db.commit()
+            self._db.refresh(row)
+        except Exception:
+            self._db.rollback()
+            raise
+
+        return self._row_to_device(row)
+
     def get_zone_row(
         self,
         zone_id: UUID,
@@ -166,4 +206,6 @@ class DeviceRepository:
             default_config=row.default_config,
             zone_id=row.zone_id,
             location_id=row.location_id,
+            sampling_interval_seconds=row.sampling_interval_seconds,
+            tracking_enabled=row.tracking_enabled,
         )
