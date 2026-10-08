@@ -22,7 +22,7 @@ def select_sensor_adapter(
 
     protocol = default_config.get("protocol")
 
-    if protocol == "simulation":
+    if protocol in {"simulation", "sim_virtual_bus"}:
         return SimulationSensorAdapter(device_type)
 
     if protocol == "mqtt":

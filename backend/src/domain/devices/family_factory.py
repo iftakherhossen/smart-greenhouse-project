@@ -45,7 +45,7 @@ class SimulationDeviceFactory(DeviceFamilyFactory):
                 ),
                 default_config={
                     **sim_moisture.default_config,
-                    "protocol": "simulation",
+                    "protocol": "sim_virtual_bus",
                 },
             ),
             Device(
@@ -58,7 +58,7 @@ class SimulationDeviceFactory(DeviceFamilyFactory):
                 ),
                 default_config={
                     **sim_light.default_config,
-                    "protocol": "simulation",
+                    "protocol": "sim_virtual_bus",
                 },
             ),
         ]
